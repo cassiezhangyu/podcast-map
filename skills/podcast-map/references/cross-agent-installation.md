@@ -7,7 +7,7 @@
 发布到 GitHub 后使用：
 
 ```sh
-npx skills add OWNER/podcast-map --skill podcast-map -g -a AGENT -y
+npx skills add cassiezhangyu/podcast-map --skill podcast-map -g -a AGENT -y
 ```
 
 `AGENT` 使用安装器支持的宿主标识，例如 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot` 或 `opencode`。若一个仓库以后包含多个 skill，仍可按名字只安装本项。
@@ -15,7 +15,7 @@ npx skills add OWNER/podcast-map --skill podcast-map -g -a AGENT -y
 已经安装新版 GitHub CLI 时，可使用官方安装器：
 
 ```sh
-gh skill install OWNER/podcast-map podcast-map --agent AGENT --scope user
+gh skill install cassiezhangyu/podcast-map podcast-map --agent AGENT --scope user
 ```
 
 ## 可移植的是方法，不是宿主能力

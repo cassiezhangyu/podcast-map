@@ -15,15 +15,15 @@
 本项目采用开放的 Agent Skills 目录格式，核心入口是 `SKILL.md`，不是 Codex 私有提示词。发布到 GitHub 后，最快的通用安装方式是：
 
 ```sh
-npx skills add OWNER/podcast-map --skill podcast-map -g -a AGENT -y
+npx skills add cassiezhangyu/podcast-map --skill podcast-map -g -a AGENT -y
 ```
 
-把 `OWNER` 换成实际 GitHub 用户或组织，把 `AGENT` 换成 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot`、`opencode` 等受支持标识。命令负责放入各宿主正确目录；无需让使用者手工寻找专用安装目录。仓库发布结构应保持为 `skills/podcast-map/SKILL.md`。
+把 `AGENT` 换成 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot`、`opencode` 等受支持标识。命令负责放入各宿主正确目录；无需让使用者手工寻找专用安装目录。仓库发布结构应保持为 `skills/podcast-map/SKILL.md`。
 
 已经安装新版 GitHub CLI 时，也可使用官方安装器：
 
 ```sh
-gh skill install OWNER/podcast-map podcast-map --agent AGENT --scope user
+gh skill install cassiezhangyu/podcast-map podcast-map --agent AGENT --scope user
 ```
 
 安装格式可以跨平台，实际执行能力仍取决于宿主是否提供网络访问、终端、浏览器、Node.js、Sharp、中文字体和 Excalidraw 渲染环境。缺少视觉依赖时，skill 应继续完成来源核验与内容理解，并诚实报告视觉交付缺口。更多边界见 [跨 Agent 安装与能力](references/cross-agent-installation.md)。
@@ -48,4 +48,4 @@ node scripts/doctor.mjs --mode visual
 
 ## 开源说明
 
-提交 GitHub 前阅读 [可移植与开源准备](references/portability-and-open-source.md)。仓库不得包含凭证、私人会话、无授权音频、完整转写、节目图片或商业字体。代码许可证尚需仓库作者明确选择；不要默认把示例素材包含在代码许可证中。
+提交 GitHub 前阅读 [可移植与开源准备](references/portability-and-open-source.md)。仓库不得包含凭证、私人会话、无授权音频、完整转写、节目图片或商业字体。代码、skill 指令、提示词、模板和原创文档采用 [MIT License](LICENSE)；基准图片不自动包含在 MIT 授权中，详见 [素材许可说明](ASSET_LICENSES.md)。
