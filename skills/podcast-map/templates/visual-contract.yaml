@@ -1,0 +1,40 @@
+contract_version: 2
+canvas:
+  ratio: "3:4"
+  size: "1200x1600"
+  background: "#FFFFFF"
+cover_system: "editorial-fixed-v1"
+preset_id: "editorial-excalidraw-v1"
+constraint_scope:
+  - id: "body-white-canvas"
+    applies_to: ["overview", "deep-read"]
+    lifetime: "series"
+    authority: "user-confirmed"
+    status: "confirmed"
+  - id: "cover-layer-system"
+    applies_to: ["cover"]
+    lifetime: "series"
+    authority: "user-confirmed"
+    status: "confirmed"
+typography:
+  title_rule: "短判断，优先一行，最多两行"
+  body_start_px: 28
+  body_risk_line_px: 22
+  validation: "按真实正文及手机预览校准，不将风险线当默认目标"
+colors:
+  palette_file: "palette.json"
+  rule: "职责在本套固定，色相可跨来源变化；同组同义同色"
+  cover_text_roles: ["ink", "由 palette.json 的 cover_accent 指定"]
+header:
+  series_mark: true
+  top_right_progress: true
+footer:
+  divider_count: 1
+  source: true
+  page_number: true
+  repeated_time_ranges: false
+illustration:
+  default: "不使用装饰性插图"
+  allowed_when: "能提供人物、动作、场景、尺度或关系信息"
+editable_source: "Excalidraw"
+approved_exceptions: []

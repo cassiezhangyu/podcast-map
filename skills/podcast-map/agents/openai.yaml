@@ -1,0 +1,4 @@
+interface:
+  display_name: "播客知识图"
+  short_description: "先讲清播客的知识与逻辑，再制作独立总览、深读图和发布文案"
+  default_prompt: "使用 $podcast-map 解读这期播客或其可靠转写稿，先形成可独立阅读的知识母稿、梳理关系与边界并检查理解，再按内容和受众制作完整知识视觉包。"
