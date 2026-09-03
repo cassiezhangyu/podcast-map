@@ -10,9 +10,9 @@
 npx skills add cassiezhangyu/podcast-map --skill podcast-map -g -a AGENT -y
 ```
 
-示例宿主标识包括 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot` 和 `opencode`。
+安装器可识别的宿主标识包括 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot` 和 `opencode`；完整执行能力仍取决于宿主提供的工具与运行环境。
 
-已经安装新版 GitHub CLI 时，也可使用：
+使用支持 `gh skill` 的 GitHub CLI 时，也可通过其预览功能安装：
 
 ```sh
 gh skill install cassiezhangyu/podcast-map podcast-map --agent AGENT --scope user
@@ -39,6 +39,6 @@ skill 采用开放的 Agent Skills 文件夹格式。不同宿主的网络、终
 
 - 代码、skill 指令、提示词、模板和原创文档采用 [MIT License](LICENSE)；
 - `assets/benchmarks` 中的基准图片不自动适用 MIT，详见 [素材许可说明](ASSET_LICENSES.md)；
-- 运行结构校验、全部测试和 open-source doctor；
-- 从干净目录执行本地安装和最小播客转写示例；
+- 运行结构、环境、配色、封面和发布工件校验；
+- 从干净目录执行安装测试和最小转写稿示例；
 - 创建版本标签，保留变更说明与已验证宿主清单。

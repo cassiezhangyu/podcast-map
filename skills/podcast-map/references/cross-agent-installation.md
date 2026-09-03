@@ -1,18 +1,18 @@
 # 跨 Agent 安装与能力边界
 
-本 skill 的核心是开放的 Agent Skills 文件夹：根入口 `SKILL.md` 只使用 `name`、`description` 和 Markdown 指令，并通过相对路径加载参考资料、脚本、模板、资产与示例。它不依赖 Codex 才能被读取。
+本 skill 采用开放的 Agent Skills 文件夹结构：以带有 `name`、`description` 元数据的 `SKILL.md` 为入口，并通过相对路径加载参考资料、脚本、模板、资产与示例。核心方法不绑定某一个特定宿主。
 
 ## 推荐安装
 
-发布到 GitHub 后使用：
+推荐使用：
 
 ```sh
 npx skills add cassiezhangyu/podcast-map --skill podcast-map -g -a AGENT -y
 ```
 
-`AGENT` 使用安装器支持的宿主标识，例如 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot` 或 `opencode`。若一个仓库以后包含多个 skill，仍可按名字只安装本项。
+`AGENT` 使用安装器可识别的宿主标识，例如 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot` 或 `opencode`。安装成功只证明文件已进入目标目录，不代表宿主具备完整执行能力。若一个仓库以后包含多个 skill，仍可按名字只安装本项。
 
-已经安装新版 GitHub CLI 时，可使用官方安装器：
+使用支持 `gh skill` 的 GitHub CLI 时，也可通过其预览功能安装：
 
 ```sh
 gh skill install cassiezhangyu/podcast-map podcast-map --agent AGENT --scope user

@@ -8,19 +8,19 @@
 2. 再把理解转译为高信息密度、可进入的社交内容；
 3. 保留证据、可编辑源和审计边界，使过程可复查、可迭代。
 
-只需要内容理解时，可以停在来源核验、content-model.md 与 knowledge.md，不需要绘图环境。默认视觉风格是作者的 `editorial-excalidraw-v1` 预设，理解方法与视觉预设相互独立。
+只需要内容理解时，可以停在来源核验、content-model.md 与 knowledge.md，不需要绘图环境。默认视觉风格是项目内置的 `editorial-excalidraw-v1` 预设，理解方法与视觉预设相互独立。
 
 ## 安装与调用
 
-本项目采用开放的 Agent Skills 目录格式，核心入口是 `SKILL.md`，不是 Codex 私有提示词。发布到 GitHub 后，最快的通用安装方式是：
+本项目采用开放的 Agent Skills 目录格式，以 `SKILL.md` 为核心入口，可安装到支持该格式的 Coding Agent。推荐使用：
 
 ```sh
 npx skills add cassiezhangyu/podcast-map --skill podcast-map -g -a AGENT -y
 ```
 
-把 `AGENT` 换成 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot`、`opencode` 等受支持标识。命令负责放入各宿主正确目录；无需让使用者手工寻找专用安装目录。仓库发布结构应保持为 `skills/podcast-map/SKILL.md`。
+把 `AGENT` 换成安装器可识别的宿主标识，例如 `codex`、`claude-code`、`cursor`、`gemini-cli`、`github-copilot` 或 `opencode`。命令负责放入对应宿主目录，无需手工查找安装位置。仓库结构保持为 `skills/podcast-map/SKILL.md`。
 
-已经安装新版 GitHub CLI 时，也可使用官方安装器：
+使用支持 `gh skill` 的 GitHub CLI 时，也可通过其预览功能安装：
 
 ```sh
 gh skill install cassiezhangyu/podcast-map podcast-map --agent AGENT --scope user
@@ -44,8 +44,8 @@ node scripts/doctor.mjs --mode visual
 - Show Notes、时间轴和评论不替代原音，转写稿需核验节目身份与音频覆盖；
 - 理解稿先于页面规划，发布切口不能改写来源立场；
 - 自动检查只能证明文件、尺寸、几何和部分配色事实，不能证明理解深度或审美通过；
-- 用户未选择建立内容评测集时，生产者预检不冒充独立理解验证。
+- 生产者预检不等同于独立理解验证；未执行独立验证时应明确说明。
 
 ## 开源说明
 
-提交 GitHub 前阅读 [可移植与开源准备](references/portability-and-open-source.md)。仓库不得包含凭证、私人会话、无授权音频、完整转写、节目图片或商业字体。代码、skill 指令、提示词、模板和原创文档采用 [MIT License](LICENSE)；基准图片不自动包含在 MIT 授权中，详见 [素材许可说明](ASSET_LICENSES.md)。
+公开分享或发布新版本前阅读 [可移植与开源准备](references/portability-and-open-source.md)。公开版本不得包含凭证、私人会话、无授权音频、完整转写、节目图片或商业字体。代码、skill 指令、提示词、模板和原创文档采用 [MIT License](LICENSE)；基准图片不自动包含在 MIT 授权中，详见 [素材许可说明](ASSET_LICENSES.md)。
