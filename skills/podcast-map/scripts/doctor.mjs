@@ -16,7 +16,7 @@ const command=name=>spawnSync(name,['--version'],{encoding:'utf8'});
 
 const major=Number(process.versions.node.split('.')[0]);
 add('node',major>=18?'pass':'fail',true,`Node ${process.versions.node}；需要 18 或更高版本`);
-for(const file of ['SKILL.md','references/content-model.md','references/transcription.md'])
+for(const file of ['SKILL.md','references/content-model.md','references/reader-first-writing.md','references/transcription.md'])
   add('file:'+file,fs.existsSync(path.join(root,file))?'pass':'fail',true,fs.existsSync(path.join(root,file))?'存在':'缺失');
 
 const markdown=[];

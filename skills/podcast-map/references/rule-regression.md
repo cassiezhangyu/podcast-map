@@ -8,6 +8,7 @@
 |---|---|
 | 输入范围与各载体证据 | transcription.md |
 | 独立解读、关系、分支与证据边界 | content-model.md |
+| 陌生读者解释、语境依赖与整套语言节奏 | reader-first-writing.md |
 | 受众、发布取舍、阅读任务与形式 | editorial-planning.md |
 | 密度与合并试排 | density-and-visual-translation.md |
 | 总览独立覆盖与旗舰角色 | overview-standard.md |
