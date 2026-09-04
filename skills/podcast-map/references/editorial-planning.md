@@ -31,7 +31,6 @@ indispensable_contribution:
 knowledge_units:
 source_anchor / claim_class:
 relation_or_tension:
-standalone_explanation / context_dependency:
 expression_mode / visual_necessity:
 boundary_or_implication:
 neighbor_dependency / merge_candidate:
@@ -42,21 +41,7 @@ scan_hook / density_plan / capacity_risk:
 - 不可替代贡献说明：删除或并入相邻页会损失什么必要理解？
 - 视觉必要性包含比较效率和信息归属，不只包含因果；矩阵不必创造文字以外的新事实才有价值。
 - 扫读入口具体，正文承担解释；不要只有大标题和抽象名词。
-- `standalone_explanation` 写出陌生读者理解本页所需的最短完整解释；`context_dependency` 记录必须从前页继承的内容。若依赖节目名、嘉宾身份或未说明的代词才能读懂，先补解释。自然语言编辑按 [reader-first-writing.md](reader-first-writing.md) 完成。
 - 密度计划描述分区与回报，不强制上中下三段或统一模块数。
-
-### 逐页自问
-
-在批量制作前，为每一页写与其阅读任务相匹配的问题，不要把总览的验收问题复制到所有页面：
-
-- 定义页：读者能否用自己的话说出概念，并看见它解决的具体困惑？
-- 机制页：每个箭头是否解释了为何来到下一步，条件和反馈是否可见？
-- 比较页：对应项是否容易找到，比较是否减少记忆负担而非增加标签？
-- 案例/场景页：处境、动作、选择和结果是否完整，图形删除后会损失什么？
-- 风险/边界页：对象、风险、允许动作和不能推出的结论是否分开？
-- 反思/学习页：抽象判断是否有具体生活去向或可观察的内化证据？
-
-自问回答属于生产者预检。它可以发现内容和排版缺口，但不能冒充真实陌生读者理解验证。
 
 ## 页数与顺序
 

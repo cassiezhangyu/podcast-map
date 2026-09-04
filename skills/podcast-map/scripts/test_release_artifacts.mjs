@@ -6,6 +6,7 @@ import crypto from "node:crypto";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { createRuntimeManifest } from "./runtime-manifest.mjs";
 
 const png = process.argv[2];
 if (!png) throw new Error("需要一张真实 1200×1600 PNG 作为隔离文件检查夹具");
@@ -15,11 +16,12 @@ const checker = fileURLToPath(new URL("./check_release_artifacts.mjs", import.me
 fs.mkdirSync(path.join(root, "series"));
 fs.mkdirSync(path.join(root, "editable"));
 fs.copyFileSync(png, path.join(root, "contact-sheet.png"));
-for (const name of ["source-verification", "content-model", "overview-proof", "page-plan",
+for (const name of ["source-verification", "source-coverage-audit", "content-model", "overview-proof", "page-plan",
   "composition-candidates", "style-direction", "visual-red-team", "quality-audit", "knowledge", "xiaohongshu-note"])
   fs.writeFileSync(path.join(root, name + ".md"), "隔离检查夹具，不是发布材料");
 for (const name of ["baseline-manifest", "mechanical-audit"])
   fs.writeFileSync(path.join(root, name + ".json"), "{}");
+fs.writeFileSync(path.join(root, "skill-runtime.json"), JSON.stringify(createRuntimeManifest()));
 const validContract = 'contract_version: 2\nbackground: "#FFFFFF"\ntop_right_progress: true\ndivider_count: 1\npalette_file: "palette.json"\npreset_id: "editorial-excalidraw-v1"\nconstraint_scope:\n  - applies_to: ["overview"]\n    lifetime: "series"\n    authority: "user-confirmed"\n    status: "confirmed"\n';
 fs.writeFileSync(path.join(root, "visual-contract.yaml"), validContract);
 const palette = {
@@ -48,7 +50,10 @@ let count = 0;
 function run(name, change, assertion) {
   const pages = structuredClone(selected);
   change(pages);
-  fs.writeFileSync(path.join(root, "release-manifest.json"), JSON.stringify({ selected_pages: pages }));
+  fs.writeFileSync(path.join(root, "release-manifest.json"), JSON.stringify({
+    package_status: "VISUAL_REVIEW_PASSED",
+    selected_pages: pages,
+  }));
   const result = spawnSync(process.execPath, [checker, root], { encoding: "utf8" });
   const report = JSON.parse(result.stdout);
   assertion(report);
@@ -62,6 +67,16 @@ try {
   run("重复页面标识拦截", p => p[1].page_id = "01", r => assert.ok(r.failures.some(x => x.includes("重复"))));
   run("选择状态不能省略", p => p[1].status = "", r => assert.ok(r.failures.some(x => x.includes("状态"))));
   run("暂选不冒充用户批准", p => p[1].status = "provisional", r => assert.ok(r.warnings.some(x => x.includes("尚无用户批准"))));
+  {
+    const pages = structuredClone(selected);
+    pages[1].status = "provisional";
+    fs.writeFileSync(path.join(root, "release-manifest.json"), JSON.stringify({ package_status: "RELEASED", selected_pages: pages }));
+    const result = spawnSync(process.execPath, [checker, root, "--release"], { encoding: "utf8" });
+    const report = JSON.parse(result.stdout);
+    assert.ok(report.failures.some(x => x.includes("正式发布仍有 provisional")));
+    count++;
+    console.log("通过：正式发布拦截暂选页面");
+  }
   run("范围外路径拦截", p => p[1].png = "../outside.png", r => assert.ok(r.failures.some(x => x.includes("相对路径"))));
   run("缺页拦截", p => p.pop(), r => assert.ok(r.failures.some(x => x.includes("页数不一致"))));
   fs.copyFileSync(path.join(root, "infographic.png"), path.join(root, "selected-overview.png"));

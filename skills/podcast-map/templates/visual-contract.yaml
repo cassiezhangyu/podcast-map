@@ -1,21 +1,7 @@
-contract_version: 2
 canvas:
   ratio: "3:4"
   size: "1200x1600"
   background: "#FFFFFF"
-cover_system: "editorial-fixed-v1"
-preset_id: "editorial-excalidraw-v1"
-constraint_scope:
-  - id: "body-white-canvas"
-    applies_to: ["overview", "deep-read"]
-    lifetime: "series"
-    authority: "user-confirmed"
-    status: "confirmed"
-  - id: "cover-layer-system"
-    applies_to: ["cover"]
-    lifetime: "series"
-    authority: "user-confirmed"
-    status: "confirmed"
 typography:
   title_rule: "短判断，优先一行，最多两行"
   body_start_px: 28

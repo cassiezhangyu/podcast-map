@@ -64,5 +64,21 @@ const explicitContainer = runCase("explicit-container", [
 ]);
 if (!explicitContainer.critical.some((item) => item.includes("exceeds assigned rectangle"))) throw new Error("未检出显式容器文字越界");
 
+const implicitContainer = runCase("implicit-container", [
+  canvas,
+  rect("container", 100, 300, 180, 100),
+  text("body", 120, 320, 260, 60, "未标注容器但真实越界"),
+  text("page", 1100, 1520, 30, 24, "01", { knowledgeRole: "navigation" }),
+]);
+if (!implicitContainer.critical.some((item) => item.includes("exceeds inferred rectangle"))) throw new Error("未检出未标注容器中的真实越界");
+
+const implicitSafe = runCase("implicit-safe", [
+  canvas,
+  rect("container", 100, 300, 280, 100),
+  text("body", 120, 320, 220, 50, "未标注但完整位于容器内"),
+  text("page", 1100, 1520, 30, 24, "01", { knowledgeRole: "navigation" }),
+]);
+if (implicitSafe.critical.some((item) => item.includes("exceeds inferred rectangle"))) throw new Error("把完整位于隐式容器内的文字误报为越界");
+
 fs.rmSync(tempRoot, { recursive: true, force: true });
-console.log("audit regression fixtures passed: overlap, later connector, occlusion, explicit container");
+console.log("audit regression fixtures passed: overlap, later connector, occlusion, explicit and inferred containers");

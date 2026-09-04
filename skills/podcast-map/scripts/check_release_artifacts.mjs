@@ -5,8 +5,12 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { createPalette, auditScenePalette } from "./palette.mjs";
 import { auditCover, COVER_SYSTEM } from "./cover-system.mjs";
+import { createRuntimeManifest } from "./runtime-manifest.mjs";
 
-const packageRoot = path.resolve(process.argv[2] || process.cwd());
+const args = process.argv.slice(2);
+const releaseMode = args.includes("--release");
+const packageArgument = args.find((argument) => argument !== "--release");
+const packageRoot = path.resolve(packageArgument || process.cwd());
 const failures = [];
 const warnings = [];
 
@@ -23,6 +27,8 @@ function pngDimensions(filePath) {
 
 for (const relativePath of [
   "source-verification.md",
+  "source-coverage-audit.md",
+  "skill-runtime.json",
   "content-model.md",
   "visual-contract.yaml",
   "overview-proof.md",
@@ -41,6 +47,18 @@ for (const relativePath of [
   "editable/infographic.excalidraw",
 ]) {
   if (!exists(relativePath)) failures.push(`缺少 ${relativePath}`);
+}
+
+if (exists("skill-runtime.json")) {
+  try {
+    const recorded = JSON.parse(fs.readFileSync(path.join(packageRoot, "skill-runtime.json"), "utf8"));
+    const actual = createRuntimeManifest();
+    if (recorded.skill !== actual.skill) failures.push("skill-runtime.json 的 skill 名称与当前运行版本不一致");
+    if (recorded.version !== actual.version) failures.push(`skill-runtime.json 记录版本 ${recorded.version}，当前为 ${actual.version}`);
+    if (recorded.digest !== actual.digest) failures.push("skill-runtime.json 摘要与当前运行版本不一致；不得混合不同 skill 版本的候选");
+  } catch (error) {
+    failures.push("skill-runtime.json 无法解析：" + error.message);
+  }
 }
 
 if (exists("visual-contract.yaml")) {
@@ -103,6 +121,9 @@ if (exists("editable")) {
 if (exists("release-manifest.json")) {
   try {
     const manifest = JSON.parse(fs.readFileSync(path.join(packageRoot, "release-manifest.json"), "utf8"));
+    const allowedPackageStates = ["PILOT_PASSED", "SCENES_RENDERED", "MECHANICAL_QA_PASSED", "VISUAL_REVIEW_PASSED", "RELEASED"];
+    if (!allowedPackageStates.includes(manifest.package_status)) failures.push("release-manifest.json 缺少有效 package_status");
+    if (releaseMode && manifest.package_status !== "RELEASED") failures.push("正式发布要求 package_status=RELEASED");
     const selected = manifest.selected_pages;
     const isNew = exists("palette.json");
     if (!Array.isArray(selected) || !selected.length) {
@@ -117,7 +138,10 @@ if (exists("release-manifest.json")) {
         ids.add(item.page_id);
         if (!["approved", "provisional"].includes(item.status) || !item.decision_basis?.trim())
           failures.push("选择状态或依据缺失：" + item.page_id);
-        if (item.status === "provisional") warnings.push("尚无用户批准：" + item.page_id);
+        if (item.status === "provisional") {
+          if (releaseMode) failures.push("正式发布仍有 provisional 页面：" + item.page_id);
+          else warnings.push("尚无用户批准：" + item.page_id);
+        }
         for (const field of ["png", "editable"]) {
           const relative = item[field];
           if (typeof relative !== "string" || path.isAbsolute(relative) || relative.split(/[\\/]/u).includes("..")) {
@@ -147,7 +171,10 @@ if (exists("release-manifest.json")) {
 
 const report = {
   scope: "artifact-contract-dimensions-selection-and-palette",
-  interpretation: "检查工件、尺寸与配对；新版清单另查逐页选择哈希和场景配色。不能验证用户批准真实性、contact sheet 像素内容或视觉质量；provisional 仍需用户审阅。",
+  interpretation: releaseMode
+    ? "正式发布检查：工件、运行版本、尺寸、配对、逐页选择哈希和场景配色；不能替代 contact sheet 与视觉质量复核。"
+    : "候选检查：工件、运行版本、尺寸、配对、逐页选择哈希和场景配色；provisional 仍需用户审阅。",
+  releaseMode,
   packageRoot,
   seriesPages: seriesFiles.length,
   failureCount: failures.length,

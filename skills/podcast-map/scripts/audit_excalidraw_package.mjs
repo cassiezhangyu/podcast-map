@@ -101,6 +101,10 @@ function pointInside(point, box) {
     point.y >= box.minY && point.y <= box.maxY;
 }
 
+function boxArea(box) {
+  return Math.max(0, box.width) * Math.max(0, box.height);
+}
+
 function pointInsideInsetShape(point, container, inset) {
   const box = container.box;
   const centerX = (box.minX + box.maxX) / 2;
@@ -268,6 +272,23 @@ for (const file of sceneFiles) {
       } else if (["ellipse", "diamond"].includes(container.element.type) &&
           !boxInsideInsetShape(firstBox, container, requiredInset)) {
         critical.push(`${file}: text ${first.id || index} leaves the ${container.element.type} inscribed safe area; bounding-box clearance is insufficient`);
+      }
+    } else if (!assignedContainerId && !["navigation", "source", "footer"].includes(knowledgeRole)) {
+      // 兼容尚未写入容器元数据的旧场景：只在文字中心明确落入某个较小形状时，
+      // 选择面积最小的形状作为隐式容器。这里只阻断真实越界，不对内边距作推断，
+      // 以免把标题压线、装饰底纹或跨区标签误报为错误。
+      const center = {
+        x: (firstBox.minX + firstBox.maxX) / 2,
+        y: (firstBox.minY + firstBox.maxY) / 2,
+      };
+      const implicitContainer = shapeContainers
+        .filter((candidate) =>
+          pointInside(center, candidate.box) &&
+          boxArea(candidate.box) > boxArea(firstBox) &&
+          boxArea(candidate.box) < 1200 * 1600 * 0.45)
+        .sort((a, b) => boxArea(a.box) - boxArea(b.box))[0];
+      if (implicitContainer && !contains(implicitContainer.box, firstBox)) {
+        critical.push(`${file}: unassigned text ${first.id || index} exceeds inferred ${implicitContainer.element.type} ${implicitContainer.element.id || ""}; add knowledgeContainerId and reflow the copy`);
       }
     }
 

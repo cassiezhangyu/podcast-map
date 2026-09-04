@@ -1,9 +1,4 @@
 feedback_quote: ""
-scope_interpretation:
-  applies_to: []
-  lifetime: "this-revision"
-  authority: "user-confirmed"
-  status: "confirmed"
 page_ids: []
 visible_problem: ""
 root_cause: ""
