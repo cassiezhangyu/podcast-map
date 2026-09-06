@@ -12,8 +12,8 @@ const rect = (id, x, y, width, height, backgroundColor = "#ffffff", customData =
   id, type: "rectangle", x, y, width, height, strokeColor: "#222222", backgroundColor,
   strokeWidth: 2, roughness: 0, customData,
 });
-const text = (id, x, y, width, height, value, customData = {}) => ({
-  id, type: "text", x, y, width, height, text: value, fontSize: 24, customData,
+const text = (id, x, y, width, height, value, customData = {}, options = {}) => ({
+  id, type: "text", x, y, width, height, text: value, fontSize: 24, customData, ...options,
 });
 const line = (id, x, y, points) => ({
   id, type: "line", x, y, width: 200, height: 0, points, strokeColor: "#222222", strokeWidth: 3,
@@ -80,5 +80,32 @@ const implicitSafe = runCase("implicit-safe", [
 ]);
 if (implicitSafe.critical.some((item) => item.includes("exceeds inferred rectangle"))) throw new Error("把完整位于隐式容器内的文字误报为越界");
 
+const flatHierarchy = runCase("flat-hierarchy", [
+  canvas,
+  rect("container", 100, 300, 500, 220, "#ffffff", { knowledgeContainerId: "module" }),
+  text("title", 130, 330, 300, 40, "模块标题", { knowledgeContainerId: "module", knowledgeTextKind: "container-title" }, { fontSize: 28, textAlign: "left" }),
+  text("body", 130, 390, 400, 80, "连续正文第一行\n连续正文第二行", { knowledgeContainerId: "module", knowledgeTextKind: "container-body" }, { fontSize: 28, textAlign: "left" }),
+  text("page", 1100, 1520, 30, 24, "01", { knowledgeRole: "navigation" }),
+]);
+if (!flatHierarchy.critical.some((item) => item.includes("lacks title hierarchy"))) throw new Error("未检出容器标题与正文同级");
+
+const centeredBody = runCase("centered-body", [
+  canvas,
+  rect("container", 100, 300, 500, 220, "#ffffff", { knowledgeContainerId: "module" }),
+  text("title", 130, 330, 300, 40, "模块标题", { knowledgeContainerId: "module", knowledgeTextKind: "container-title" }, { fontSize: 32, textAlign: "left" }),
+  text("body", 130, 390, 400, 80, "连续正文第一行\n短句", { knowledgeContainerId: "module", knowledgeTextKind: "container-body" }, { fontSize: 28, textAlign: "center" }),
+  text("page", 1100, 1520, 30, 24, "01", { knowledgeRole: "navigation" }),
+]);
+if (!centeredBody.critical.some((item) => item.includes("centered multi-line body"))) throw new Error("未检出多行矩形正文居中");
+
+const intentionalCenteredLabel = runCase("intentional-centered-label", [
+  canvas,
+  rect("container", 100, 300, 500, 220, "#ffffff", { knowledgeContainerId: "module" }),
+  text("title", 130, 330, 300, 40, "模块标题", { knowledgeContainerId: "module", knowledgeTextKind: "container-title" }, { fontSize: 32, textAlign: "left" }),
+  text("body", 130, 390, 400, 80, "对称图形标签\n第二行", { knowledgeContainerId: "module", knowledgeTextKind: "container-body", allowCenteredBody: true }, { fontSize: 28, textAlign: "center" }),
+  text("page", 1100, 1520, 30, 24, "01", { knowledgeRole: "navigation" }),
+]);
+if (intentionalCenteredLabel.critical.some((item) => item.includes("centered multi-line body"))) throw new Error("没有尊重显式居中例外");
+
 fs.rmSync(tempRoot, { recursive: true, force: true });
-console.log("audit regression fixtures passed: overlap, later connector, occlusion, explicit and inferred containers");
+console.log("audit regression fixtures passed: overlap, connectors, containers, hierarchy and alignment");

@@ -316,12 +316,21 @@ for (const file of sceneFiles) {
       warnings.push(`${file}: container ${container.element.id || ""} 正文为 ${bodyFont}px，低于 22px 风险线；需在手机尺寸查看最终 PNG`);
     }
 
+    for (const { element } of bodyTexts) {
+      const lineCount = String(element.text || "").split(/\r?\n/u).filter((line) => line.trim()).length;
+      if (lineCount > 1 && element.textAlign === "center" &&
+          element.customData?.allowCenteredBody !== true) {
+        critical.push(`${file}: container ${container.element.id || ""} uses centered multi-line body ${element.id || ""}; use left alignment or mark an intentional exception`);
+      }
+    }
 
     if (explicitTitles.length > 0) {
       const smallestTitle = Math.min(...explicitTitles.map(({ element }) => Number(element.fontSize || 0)));
       const largestBody = Math.max(...bodyTexts.map(({ element }) => Number(element.fontSize || 0)));
-      if (smallestTitle < largestBody) {
-        critical.push(`${file}: container ${container.element.id || ""} reverses hierarchy; title ${smallestTitle}px is smaller than body ${largestBody}px`);
+      if (smallestTitle <= largestBody) {
+        critical.push(`${file}: container ${container.element.id || ""} lacks title hierarchy; title ${smallestTitle}px must be larger than body ${largestBody}px`);
+      } else if (smallestTitle - largestBody < 3) {
+        warnings.push(`${file}: container ${container.element.id || ""} title/body size difference is only ${smallestTitle - largestBody}px; inspect hierarchy in final PNG`);
       }
     }
 

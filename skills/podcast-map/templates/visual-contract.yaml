@@ -3,6 +3,9 @@ canvas:
   size: "1200x1600"
   background: "#FFFFFF"
 typography:
+  baseline: "Excalidraw Virgil"
+  excalidraw_font_family: 1
+  mixed_fonts: false
   title_rule: "短判断，优先一行，最多两行"
   body_start_px: 28
   body_risk_line_px: 22

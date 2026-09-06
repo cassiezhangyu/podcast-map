@@ -19,6 +19,20 @@ fs.copyFileSync(png, path.join(root, "contact-sheet.png"));
 for (const name of ["source-verification", "source-coverage-audit", "content-model", "overview-proof", "page-plan",
   "composition-candidates", "style-direction", "visual-red-team", "quality-audit", "knowledge", "xiaohongshu-note"])
   fs.writeFileSync(path.join(root, name + ".md"), "隔离检查夹具，不是发布材料");
+fs.writeFileSync(path.join(root, "page-understanding-audit.md"), `# 逐页理解合同
+
+## overview
+- Q1 内容：隔离夹具证据
+- Q2 图解：隔离夹具证据
+- Q3 陌生读者：隔离夹具证据
+- 结论：保留
+
+## 01
+- Q1 内容：隔离夹具证据
+- Q2 图解：隔离夹具证据
+- Q3 陌生读者：隔离夹具证据
+- 结论：保留
+`);
 for (const name of ["baseline-manifest", "mechanical-audit"])
   fs.writeFileSync(path.join(root, name + ".json"), "{}");
 fs.writeFileSync(path.join(root, "skill-runtime.json"), JSON.stringify(createRuntimeManifest()));
@@ -79,6 +93,9 @@ try {
   }
   run("范围外路径拦截", p => p[1].png = "../outside.png", r => assert.ok(r.failures.some(x => x.includes("相对路径"))));
   run("缺页拦截", p => p.pop(), r => assert.ok(r.failures.some(x => x.includes("页数不一致"))));
+  fs.writeFileSync(path.join(root, "page-understanding-audit.md"), "## overview\n- Q1 内容：有\n- Q2 图解：有\n- Q3 陌生读者：有\n- 结论：保留\n");
+  run("逐页理解合同缺页时拦截", () => {}, r => assert.ok(r.failures.some(x => x.includes("逐页理解合同缺少 01"))));
+  fs.writeFileSync(path.join(root, "page-understanding-audit.md"), `## overview\n- Q1 内容：有\n- Q2 图解：有\n- Q3 陌生读者：有\n- 结论：保留\n## 01\n- Q1 内容：有\n- Q2 图解：有\n- Q3 陌生读者：有\n- 结论：保留\n`);
   fs.copyFileSync(path.join(root, "infographic.png"), path.join(root, "selected-overview.png"));
   fs.appendFileSync(path.join(root, "infographic.png"), Buffer.from("模拟导出了未选用的另一版本"));
   run("最终 PNG 不是选中版本时拦截", p => p[1].png = "selected-overview.png",

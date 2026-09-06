@@ -8,6 +8,26 @@ import { createPalette } from './palette.mjs';
 export const COVER_SYSTEM = 'editorial-fixed-v1';
 const escapeXml = s => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const normalize = s => s.replace(/\s/gu, '');
+const cleanEpisode = s => normalize(String(s)).replace(/[.．。:：-]+$/gu, '');
+
+function validateSourceIdentity(config) {
+  const identity = config.source_identity;
+  if (!identity || typeof identity !== 'object') throw new Error('缺少结构化 source_identity，无法核验封面人物与节目身份');
+  for (const key of ['platform', 'show', 'episode', 'duration', 'verification'])
+    if (typeof identity[key] !== 'string' || !identity[key].trim()) throw new Error(`source_identity.${key} 不能为空`);
+  if (!Array.isArray(identity.hosts) || !identity.hosts.length || identity.hosts.some(s => typeof s !== 'string' || !s.trim()))
+    throw new Error('source_identity.hosts 至少需要一位经核验的本期主持人');
+  if (!Array.isArray(identity.guests) || identity.guests.some(s => typeof s !== 'string' || !s.trim()))
+    throw new Error('source_identity.guests 必须是数组；单人节目使用空数组');
+  if (!Array.isArray(config.source_lines) || config.source_lines.length !== 2 || config.source_lines.some(s => typeof s !== 'string' || !s.trim()))
+    throw new Error('播客封面来源识别固定为两行');
+  const first = normalize(config.source_lines[0]), second = normalize(config.source_lines[1]);
+  for (const value of [identity.platform, identity.show, ...identity.hosts, ...identity.guests])
+    if (!first.includes(normalize(value))) throw new Error(`来源第一行缺少已核验身份：${value}`);
+  for (const value of [identity.episode, identity.duration, identity.published_at].filter(Boolean))
+    if (!second.includes(normalize(value))) throw new Error(`来源第二行缺少已核验信息：${value}`);
+  return identity;
+}
 
 export function loadSharp(root) {
   return createRequire(path.join(path.resolve(root), 'package.json'))(process.env.KNOWLEDGE_SHARP_MODULE || 'sharp');
@@ -34,9 +54,12 @@ export function buildCoverSvg(config, palette, overview, podcast) {
     throw new Error('标题失去大字层级：局部适配限 88–116px，至少一行达到 108px；不可整体缩字');
   if (lines.some(l => !['ink', 'accent'].includes(l.role))) throw new Error('标题只能使用深色和一个强调角色');
   if (lines.some((l, i) => i > 0 && lines[i - 1].role === 'accent' && l.role === 'ink')) throw new Error('标题不逐行交替换色');
-  for (const key of ['subtitle', 'source_lines'])
+  for (const key of ['subtitle'])
     if (!Array.isArray(config[key]) || config[key].length < 1 || config[key].length > 2 || config[key].some(s => typeof s !== 'string' || !s.trim()))
       throw new Error(key + ' 需要一到两行实际文字');
+  const identity = validateSourceIdentity(config);
+  if (normalize(config.original_title).startsWith(normalize(identity.episode)) && cleanEpisode(lines[0].text) !== cleanEpisode(identity.episode))
+    throw new Error('标题第一行必须单独放集数或期号，不能与主题文字混排');
   if (lines.length === 4 && !config.adaptation_reason?.trim()) throw new Error('四行适配须记录断行理由');
   if (!overview?.length) throw new Error('必须使用最终总览作为背景');
   const step = lines.length === 3 ? 136 : 114;
@@ -65,7 +88,14 @@ export async function expectedCover(root, sharp = loadSharp(root)) {
   const config = JSON.parse(fs.readFileSync(path.join(root, 'cover-layout.json'), 'utf8'));
   const palette = JSON.parse(fs.readFileSync(path.join(root, 'palette.json'), 'utf8'));
   if ((config.source_type ?? 'podcast') !== 'podcast') throw new Error('当前封面系统只接受播客来源');
+  const identity = validateSourceIdentity(config);
+  if (!fs.existsSync(localFile(root, identity.verification))) throw new Error('source_identity.verification 指向的核验记录不存在');
   if (!config.podcast_image && !config.missing_image_reason?.trim()) throw new Error('缺官方图片时须记录限制');
+  if (config.podcast_image) {
+    if (config.podcast_image_kind !== 'show_album') throw new Error('默认只接受经核验的节目专辑图；单集图须另行取得用户批准');
+    if (typeof config.podcast_image_verification !== 'string' || !config.podcast_image_verification.trim() || !fs.existsSync(localFile(root, config.podcast_image_verification)))
+      throw new Error('节目专辑图必须提供存在的 podcast_image_verification 核验记录');
+  }
   const background = await prepareCoverBackground(fs.readFileSync(path.join(root, 'infographic.png')), sharp);
   return buildCoverSvg(config, palette, background,
     config.podcast_image ? fs.readFileSync(localFile(root, config.podcast_image)) : null);

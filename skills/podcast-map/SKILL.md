@@ -21,12 +21,15 @@ description: "深入解读播客、长音频及其可靠转写稿，梳理概念
 
 - 输入范围与缺失明确，结论、术语和锚点可追溯；Show Notes、时间轴和评论不能代替原音。不得因受限环境报错而静默更换转写模型或后端。
 - 理解稿先于页面计划；保留重要分支、分歧和不确定性，不为一个传播切口制造虚假统一结论。
-- 总览是独立高密度旗舰页，不能靠后页补核心结论。
+- 总览是独立高密度旗舰页：既要给出统领全篇的核心关系，也要容纳会改变整体理解的支撑条件、重要分支、边界和反馈；不能用一条漂亮主线掩盖遗漏，也不能靠后页补核心结论。
 - 页数服从必要内容、关系和手机容量；没有最低页数，深读最多 15 页。不把一个话题自动换成一页，也不强压独立机制来追求少页。
 - 每页有解释、证据或具体处境支撑。矩阵、场景、机制图和编辑排版都可成立，由阅读任务选择；不为显得“有图”制造框线。
+- 每张知识页都执行“逐页理解合同”：内容真实、完整且关系讲通；视觉结构确实帮助理解；没听过节目的读者可以仅凭本页进入。任一项答不出肯定且具体的证据，就回到内容、关系或构图重做。
 - 纯白画布、深色阅读骨架、克制且有含义的强调色；换知识包可换色，同套不随页换色。
 - 保持 Excalidraw 手绘线感及对应可编辑源；封面遵守批准的系列骨架。
 - 文字不重叠、不压线、不裁切，正常手机宽度可读；优先改写和重排，不以缩字解决容量。
+- 页面标题、分区标题、容器标题与正文必须形成稳定层级；多行正文默认左对齐。箭头和连线必须能指出明确的起点、关系与终点，不作装饰。
+- 共享组件、生成函数或同类页面出现问题时，修正负责该行为的通用规则并扫描整套选用页面，不只修被批注的单页。
 - 用户选择优先于版本新旧；冻结批准资产。最终图片而非计划或自报字段决定视觉质量。
 
 ## 完整制作路线
@@ -39,7 +42,9 @@ description: "深入解读播客、长音频及其可靠转写稿，梳理概念
 
 读 [editorial-planning.md](references/editorial-planning.md)，在 page-plan.md 简记受众、传播切口和取舍。先确定读者需要比较、追踪、辨别还是理解处境，再选形式；题材约束忠实度，不直接决定布局。按 [density-and-visual-translation.md](references/density-and-visual-translation.md) 做知识单元聚合与真实合并测试。
 
-总览另读 [overview-standard.md](references/overview-standard.md)，完成独立复述证明。候选与风险小样的范围统一按 [production-protocol.md](references/production-protocol.md)，不在不同文档重复规定数量。
+总览另读 [overview-standard.md](references/overview-standard.md)，先把所有核心语义单元映射到“主关系、支撑系统、边界/反馈或代表性锚点”，再选择能让这些职责共同可见的页面结构并完成独立复述证明。固定的是覆盖与关系原则，不是“循环＋双栏”等具体版式。候选与风险小样的范围统一按 [production-protocol.md](references/production-protocol.md)，不在不同文档重复规定数量。
+
+深读组图另读 [deep-read-standard.md](references/deep-read-standard.md)。先为每页确定一个不可替代的知识增量和一个主导关系，再安排整套认知推进；深读页不是总览的缩小版，也不是把母稿按话题切成若干卡片。页面形态服从比较、分叉、时序、反馈、层级或处境，不追求机械多样。
 
 ### 3. 系列语言与结构小样
 
@@ -50,6 +55,8 @@ description: "深入解读播客、长音频及其可靠转写稿，梳理概念
 ### 4. 制作与择优
 
 按 [visual-system.md](references/visual-system.md) 实现 Excalidraw，按 [cover-design.md](references/cover-design.md) 制作封面。SVG、HTML 或 Canvas 可以作为渲染中间层，但不能替代逐页 `.excalidraw` 可编辑源。只有需要信息性插图时才读 [excalidraw-micro-illustrations.md](references/excalidraw-micro-illustrations.md)。
+
+制作每页前先在 page-plan.md 写明该页的内容命题、不可替代知识增量、逻辑关系、图解职责、陌生读者入口和相邻页依赖；成图后只看最终 PNG，按 [quality-gates.md](references/quality-gates.md) 的逐页理解合同记录实际可见证据。不能以“已加入文字”“用了流程图”或生产者自报 PASS 代替回答。
 
 页面逐张择优，允许新版总览、旧版矩阵共同进入成品；选择记录及哈希按生产协议保存。新方案必须带来理解增量，不能仅以“更有图”替代清晰的批准稿。
 

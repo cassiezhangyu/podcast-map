@@ -15,7 +15,10 @@ const palette = {
 const config = {
   system:COVER_SYSTEM, original_title:'E163. 要完了？不！是要玩了！',
   title_lines:[{text:'E163.',role:'ink'},{text:'要完了？',role:'ink'},{text:'不！是要玩了！',role:'accent'}],
-  subtitle:['把定义权留给自己'],source_lines:['测试来源'],podcast_image:'podcast.png'
+  subtitle:['把定义权留给自己'],
+  source_identity:{platform:'小宇宙',show:'测试节目',hosts:['测试主持'],guests:['测试嘉宾'],episode:'E163',duration:'76:53',verification:'source-verification.md'},
+  source_lines:['小宇宙 · 测试节目 · 主持：测试主持 · 嘉宾：测试嘉宾','E163 · 76:53'],
+  podcast_image:'podcast.png',podcast_image_kind:'show_album',podcast_image_verification:'album-verification.md'
 };
 const sharp=loadSharp(process.cwd());
 const image=await sharp({create:{width:1200,height:1600,channels:3,background:'#ffffff'}}).png().toBuffer();
@@ -30,6 +33,8 @@ try {
   fs.writeFileSync(path.join(root,'palette.json'),JSON.stringify(palette));
   fs.writeFileSync(path.join(root,'infographic.png'),image);
   fs.writeFileSync(path.join(root,'podcast.png'),image);
+  fs.writeFileSync(path.join(root,'source-verification.md'),'已核验主持、嘉宾与节目身份');
+  fs.writeFileSync(path.join(root,'album-verification.md'),'已核验官方节目专辑图');
   const svg=await expectedCover(root,sharp);
   writeSvg(svg);
   await test('三行母版实际 SVG 匹配',async()=>assert.deepEqual((await auditCover(root)).errors,[]));
@@ -40,11 +45,16 @@ try {
     assert.ok(outer.every(c=>c>140&&c<180),'外围应为参考处理后的灰色，不能漂白');
     assert.ok(panel[0]>240&&panel[0]<255&&panel[0]>panel[1]&&panel[1]>panel[2],'面板应微透暖白，不是纯白');
   });
-  const four={...config,original_title:'EP58 别再追 AI 新工具了，先问问自己到底要什么？',adaptation_reason:'完整词组与反问分行',title_lines:[{text:'EP58',role:'ink',font_size:116},{text:'别再追 AI 新工具了，',role:'ink',font_size:96},{text:'先问问自己',role:'accent',font_size:108},{text:'到底要什么？',role:'accent',font_size:108}]};
+  const four={...config,original_title:'EP58 别再追 AI 新工具了，先问问自己到底要什么？',source_identity:{...config.source_identity,episode:'EP58'},source_lines:[config.source_lines[0],'EP58 · 76:53'],adaptation_reason:'完整词组与反问分行',title_lines:[{text:'EP58',role:'ink',font_size:116},{text:'别再追 AI 新工具了，',role:'ink',font_size:96},{text:'先问问自己',role:'accent',font_size:108},{text:'到底要什么？',role:'accent',font_size:108}]};
   await test('四行允许局部适配',async()=>assert.ok(buildCoverSvg(four,palette,image,image).includes('y="842"')));
   await test('整体缩成76px被拒',async()=>assert.throws(()=>buildCoverSvg({...four,title_lines:four.title_lines.map(l=>({...l,font_size:76}))},palette,image,image),/整体缩字/));
   await test('所有行降至96px仍被拒',async()=>assert.throws(()=>buildCoverSvg({...four,title_lines:four.title_lines.map(l=>({...l,font_size:96}))},palette,image,image),/大字层级/));
   await test('原标题删词被拒',async()=>assert.throws(()=>buildCoverSvg({...config,original_title:'另一标题'},palette,image,image),/原标题不同/));
+  await test('标题首行混入主题被拒',async()=>assert.throws(()=>buildCoverSvg({...config,title_lines:[{...config.title_lines[0],text:'E163. 要'},{...config.title_lines[1],text:'完了？'},{...config.title_lines[2]}]},palette,image,image),/集数或期号/));
+  await test('缺少主持人被拒',async()=>assert.throws(()=>buildCoverSvg({...config,source_identity:{...config.source_identity,hosts:[]}},palette,image,image),/主持人/));
+  await test('来源行漏掉嘉宾被拒',async()=>assert.throws(()=>buildCoverSvg({...config,source_lines:['小宇宙 · 测试节目 · 主持：测试主持',config.source_lines[1]]},palette,image,image),/测试嘉宾/));
+  await test('来源行漏掉期数被拒',async()=>assert.throws(()=>buildCoverSvg({...config,source_lines:[config.source_lines[0],'76:53']},palette,image,image),/E163/));
+  await test('错误图片类型被拒',async()=>{writeConfig({...config,podcast_image_kind:'episode_art'});assert.ok((await auditCover(root)).errors.some(s=>s.includes('节目专辑图')));writeConfig(config);});
   await test('交替染色被拒',async()=>assert.throws(()=>buildCoverSvg({...config,title_lines:config.title_lines.map((l,i)=>({...l,role:i===1?'accent':'ink'}))},palette,image,image),/交替换色/));
   await test('非播客来源类型被拒',async()=>assert.throws(()=>buildCoverSvg({...config,source_type:'unsupported'},palette,image,null),/只接受播客来源/));
   for (const [name, before, after] of [

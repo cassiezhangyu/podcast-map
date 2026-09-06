@@ -32,6 +32,8 @@ knowledge_units:
 source_anchor / claim_class:
 relation_or_tension:
 expression_mode / visual_necessity:
+page_claim / completeness_boundary:
+visual_encoding / stranger_bridge:
 boundary_or_implication:
 neighbor_dependency / merge_candidate:
 scan_hook / density_plan / capacity_risk:
@@ -40,8 +42,11 @@ scan_hook / density_plan / capacity_risk:
 - 认知变化不是“知道更多”，而是能比较、解释或判断什么。
 - 不可替代贡献说明：删除或并入相邻页会损失什么必要理解？
 - 视觉必要性包含比较效率和信息归属，不只包含因果；矩阵不必创造文字以外的新事实才有价值。
+- `page_claim / completeness_boundary` 说明本页究竟要讲透什么，以及哪些内容属于相邻页而非遗漏；`visual_encoding` 说明图形编码的是因果、顺序、比较、条件、流向或处境中的哪一种关系；`stranger_bridge` 说明没听过节目的人从哪里进入、哪些术语必须在页内解释。
 - 扫读入口具体，正文承担解释；不要只有大标题和抽象名词。
 - 密度计划描述分区与回报，不强制上中下三段或统一模块数。
+- 深读页的不可替代贡献要写成认知变化：读者看完后能多解释、辨别或判断什么。只写“补充案例”“介绍概念”不足以证明独立成页。
+- 相邻页依赖要写成自然问题：前一页留下什么问题由本页回答，本页又为下一页建立什么前提。若两页只是并列换话题，检查顺序是否服务理解；若一页删掉后整套论证没有缺口，优先合并或删除。
 
 ## 页数与顺序
 
@@ -50,6 +55,8 @@ scan_hook / density_plan / capacity_risk:
 独立关系、不同边界、争夺入口的主问题，或正常手机字号无法共存，可以成为拆页理由。互相解释的薄观点应合并；丰富场景或完整机制可以独立。
 
 顺序服务理解，不必复制来源时间线。总览覆盖主干，深读补机制、证据和边界，不逐页复述总览标签。
+
+深读组图的具体结构、删除测试与连续性要求见 [deep-read-standard.md](deep-read-standard.md)。
 
 ## 候选与版本选择
 

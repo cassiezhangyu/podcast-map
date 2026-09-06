@@ -1,0 +1,28 @@
+{
+  "system": "editorial-fixed-v1",
+  "source_type": "podcast",
+  "original_title": "EP00.准确原标题",
+  "title_lines": [
+    {"text": "EP00.", "font_size": 116, "role": "ink"},
+    {"text": "准确原标题的前半句", "font_size": 104, "role": "ink"},
+    {"text": "准确原标题的后半句", "font_size": 92, "role": "accent"}
+  ],
+  "subtitle": ["一句核心问题或张力", "必要时使用第二行"],
+  "source_identity": {
+    "platform": "小宇宙",
+    "show": "节目名",
+    "hosts": ["主持人姓名"],
+    "guests": ["嘉宾姓名"],
+    "episode": "EP00",
+    "duration": "00:00",
+    "published_at": "YYYY-MM-DD",
+    "verification": "source-verification.md"
+  },
+  "source_lines": [
+    "小宇宙 · 节目名 · 主持：主持人姓名 · 嘉宾：嘉宾姓名",
+    "EP00 · 00:00 · YYYY-MM-DD"
+  ],
+  "podcast_image": "source/album-official.png",
+  "podcast_image_kind": "show_album",
+  "podcast_image_verification": "source/album-verification.md"
+}

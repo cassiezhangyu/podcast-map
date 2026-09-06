@@ -8,7 +8,7 @@ import { compareSkillTrees, createRuntimeManifest, skillRoot } from "./runtime-m
 
 const manifest = createRuntimeManifest();
 assert.equal(manifest.skill, "podcast-map");
-assert.equal(manifest.version, "1.1.1");
+assert.equal(manifest.version, "1.1.7");
 assert.match(manifest.digest, /^[a-f0-9]{64}$/u);
 
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "podcast-map-runtime-"));

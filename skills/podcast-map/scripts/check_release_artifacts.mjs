@@ -33,6 +33,7 @@ for (const relativePath of [
   "visual-contract.yaml",
   "overview-proof.md",
   "page-plan.md",
+  "page-understanding-audit.md",
   "composition-candidates.md",
   "style-direction.md",
   "baseline-manifest.json",
@@ -96,6 +97,22 @@ const editableDir = path.join(packageRoot, "editable");
 const seriesFiles = exists("series")
   ? fs.readdirSync(seriesDir).filter((name) => /^\d{2}\.png$/u.test(name)).sort()
   : [];
+
+if (exists("page-understanding-audit.md")) {
+  const audit = fs.readFileSync(path.join(packageRoot, "page-understanding-audit.md"), "utf8");
+  const blocks = new Map();
+  const matches = [...audit.matchAll(/^##\s+(overview|\d{2})\s*$([\s\S]*?)(?=^##\s+|(?![\s\S]))/gmu)];
+  for (const match of matches) blocks.set(match[1], match[2]);
+  for (const pageId of ["overview", ...seriesFiles.map(name => path.basename(name, ".png"))]) {
+    const block = blocks.get(pageId);
+    if (!block) { failures.push(`逐页理解合同缺少 ${pageId}`); continue; }
+    for (const label of ["Q1 内容", "Q2 图解", "Q3 陌生读者"])
+      if (!new RegExp(`^-\\s*${label}：\\s*\\S`, "mu").test(block)) failures.push(`逐页理解合同 ${pageId} 缺少 ${label} 证据`);
+    const decision = block.match(/^-\s*结论：\s*(保留|重写内容|重构图解)\s*$/mu)?.[1];
+    if (!decision) failures.push(`逐页理解合同 ${pageId} 缺少有效结论`);
+    else if (decision !== "保留") failures.push(`逐页理解合同 ${pageId} 尚需${decision}`);
+  }
+}
 
 if (seriesFiles.length === 0) failures.push("series/ 中没有按两位序号命名的深读页 PNG");
 

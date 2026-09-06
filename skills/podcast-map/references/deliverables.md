@@ -14,6 +14,7 @@ palette.json            正文与封面共读的颜色角色、含义与去重�
 release-manifest.json   最终逐页选用版本、文件、哈希与批准状态
 overview-proof.md       总览闭卷复述和三个候选构图证明
 page-plan.md            受众、发布取舍及每页贡献、表达类型和相邻关系
+page-understanding-audit.md 总览与每张深读页的内容、图解、陌生读者三问证据
 composition-candidates.md 总览及高风险页候选、取舍和淘汰理由
 style-direction.md      来源专属视觉库存、视觉命题和明确拒绝的套路
 revision-scope.yaml     返修范围、冻结资产和允许变化的文件
@@ -76,6 +77,7 @@ content-model.md
 visual-contract.yaml
 overview-proof.md
 page-plan.md
+page-understanding-audit.md
 composition-candidates.md
 style-direction.md
 revision-scope.yaml
