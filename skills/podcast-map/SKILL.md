@@ -36,7 +36,7 @@ description: "深入解读播客、长音频及其可靠转写稿，梳理概念
 
 ### 1. 来源与内容
 
-先读 [transcription.md](references/transcription.md)，核验节目身份、完整音轨、转写覆盖和关键术语。按 [content-model.md](references/content-model.md) 建立内容底账、来源覆盖审计与独立可读的 knowledge.md，解释概念、关系、主线和分支，区分来源主张、综合、延伸及待核验事实。再按 [reader-first-writing.md](references/reader-first-writing.md) 检查陌生读者能否脱离节目语境读懂。完成 [quality-gates.md](references/quality-gates.md) 的理解验收后才规划图片。正常阶段连续执行，不要求用户逐关签字。
+先读 [transcription.md](references/transcription.md) 和 [runtime-compatibility.md](references/runtime-compatibility.md)，在下载音频或安装依赖前运行 `scripts/check_transcription_runtime.py --json` 做只读环境探测。优先复用探测到的可用 Python、MLX 包和模型缓存；缺失时明确记录 `DEPENDENCY_BLOCKED`，未经用户授权不得自动安装或下载，也不得静默切换低质量后端。随后核验节目身份、完整音轨、转写覆盖和关键术语。按 [content-model.md](references/content-model.md) 建立内容底账、来源覆盖审计与独立可读的 knowledge.md，解释概念、关系、主线和分支，区分来源主张、综合、延伸及待核验事实。再按 [reader-first-writing.md](references/reader-first-writing.md) 检查陌生读者能否脱离节目语境读懂。完成 [quality-gates.md](references/quality-gates.md) 的理解验收后才规划图片。正常阶段连续执行，不要求用户逐关签字。
 
 ### 2. 阅读任务与页面计划
 

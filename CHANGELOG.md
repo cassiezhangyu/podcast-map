@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0
+
+- 增加跨平台转写运行时探测：复用已存在的 Python、虚拟环境、ASR 包和 Hugging Face 模型缓存，避免不同 Coding Agent 重复下载；
+- macOS/Linux 检查 `.venv/bin/python`，Windows 检查 `.venv/Scripts/python.exe`；
+- Windows 不假设支持 MLX，探测并报告已有的 `faster-whisper` 或 `openai-whisper` 后端；
+- 按平台检查 `ffmpeg`、`ffprobe`、`afconvert` 和 `afinfo`，缺失时输出 `DEPENDENCY_BLOCKED` 或 `ALTERNATIVE_AVAILABLE`；
+- 未经授权不自动安装依赖、下载模型或静默切换转写后端。
+
 ## v1.1.7
 
 - 将总览升级为独立高密度旗舰页：同时呈现主关系、支撑系统、边界、反馈和代表性锚点，不用一条漂亮主线掩盖重要分支；

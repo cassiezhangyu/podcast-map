@@ -33,4 +33,6 @@ gh skill install cassiezhangyu/podcast-map podcast-map --agent AGENT --scope use
 - 核心方法只写在 `SKILL.md` 和 `references/`，不复制多份平台专用提示词。
 - 平台元数据放入独立可选目录；当前 `agents/openai.yaml` 只负责 OpenAI 侧展示，不改变核心行为。
 - 脚本不写用户名绝对路径；第三方依赖通过环境变量或项目依赖取得。
+- 转写运行时必须区分平台：macOS 可使用 MLX；Windows 不假设存在 MLX，先探测并复用已有的 `faster-whisper` 或 `openai-whisper`，同时检查 Windows 虚拟环境的 `Scripts/python.exe` 路径与 `ffmpeg`/`ffprobe`。
+- 不把模型缓存存在误认为 Python 依赖已安装，也不把一个 Agent 的沙箱可见性误认为另一 Agent 的可见性；跨 Agent 交接必须保存实际探测结果。
 - 新增宿主时先验证发现、相对链接、脚本权限和最小示例，再声明兼容；不因“能安装”就声称完整视觉链路通过。
